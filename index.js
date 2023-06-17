@@ -1,19 +1,22 @@
-const express=require('express')
-const app=express()
-const cors=require('cors')
-const connectDB = require('./DB/connectDb')
-require('dotenv').config()
-app.use(express.json())
-app.use(cors())
- port=process.env.PORT
-
+const express=require('express') ;
+const app =express()
+const indexRouter =require ('./routes/indexRouter.js')
+const dotenv =require ('dotenv')
+dotenv.config()
+const connectDB =require ('./config/connectDb.js');
+const baseUrl=process.env.BASE_URL
+//DB
 connectDB()
+//middleware
+app.use(express.json())
+//routes
+app.use(`/${baseUrl}/auth`,indexRouter.authRouter)
+app.use(`/${baseUrl}/user`,indexRouter.userRouter)
+app.use(`/${baseUrl}/message`,indexRouter.messageRouter)
 
-//route
- app.use('/api/user',require('./router/userRouter'))
- app.use('/api/auth',require('./router/auth'))
- app.use('/api/message',require('./router/messageRouter'))
+const port=process.env.PORT;
 
-app.listen(port,()=>{
-    console.log(`app is running... on port ${port}`)
+
+app.listen(port||6000,()=>{
+    console.log(`app is running ..... on port ${port}`)
 })
